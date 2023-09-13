@@ -41,8 +41,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 20px; /* Adjust the margin as needed */
-  background-color: #f0f0f0; /* Background color for the search bar */
+  margin-top: 20px; 
+  background-color: #d3c7c7; 
   border-radius: 5px;
   padding: 10px;
 }
@@ -51,8 +51,10 @@
   flex-grow: 1;
   border: none;
   outline: none;
-  font-size: 18px; /* Adjust the font size as needed */
-  padding-right: 30px; /* Space for the icon */
+  background-color: transparent;
+  color: black;
+  font-size: 18px;
+  padding-right: 30px;
 }
 
 .search-icon {
@@ -60,4 +62,20 @@
   height: 20px; /* Adjust the height of the icon */
   margin-left: 10px; /* Adjust the margin as needed */
   cursor: pointer;
+}
+
+.table{
+  width: 100%;
+  border: 3px solid black;
+  border-collapse: collapse;
+}
+
+.table th, .table td{
+  border: 1px solid black;
+  padding: 5px;
+  text-align: left;
+}
+
+.table-hover:hover{
+  background-color: #b8b7b7;
 }
