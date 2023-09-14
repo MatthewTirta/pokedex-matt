@@ -30,6 +30,16 @@ const typeColors = {
 	dragon: '#9385f2',
 };
 
+const filterGen = (index) => {
+	if (index <= 151) {
+		return 'Gen 1';
+	} else if (index <= 251) {
+		return 'Gen 2';
+	} else {
+		return 'Gen 3';
+	}
+};
+
 const Pokemon = ({ species, Index, types }) => {
 	const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
 		Index + 1
@@ -51,7 +61,7 @@ const Pokemon = ({ species, Index, types }) => {
 								backgroundColor: typeColors[type],
 								color: 'black',
 								padding: '2px 5px',
-								margin: '0 5px',
+								marginLeft: '5px',
 								borderRadius: '5px',
 								display: 'inline-block',
 							}}
@@ -69,6 +79,8 @@ const PokemonHome = () => {
 	const [pokemon, setPokemon] = useState([]);
 	const [search, setSearch] = useState('');
 	const [Types, setTypes] = useState({});
+	const [loading, setLoading] = useState(true);
+	const [gen, setGen] = useState('ALL');
 
 	useEffect(() => {
 		fetchData().then((data) => {
@@ -85,14 +97,24 @@ const PokemonHome = () => {
 					[p.name]: pokemonTypes,
 				}));
 			});
+
+			setTimeout(() => {
+				setLoading(false);
+			}, 3000);
 		});
 	}, []);
 
 	const filteredPokemon = pokemon.filter(
 		(species) =>
-			species.name.includes(search.toLowerCase()) ||
-			(Types[species.name] &&
-				Types[species.name].some((type) => type.includes(search.toLowerCase())))
+			(gen === 'All' ||
+				filterGen(
+					pokemon.findIndex((poke) => poke.name === species.name) + 1
+				) === gen) &&
+			(species.name.includes(search.toLowerCase()) ||
+				(Types[species.name] &&
+					Types[species.name].some((type) =>
+						type.includes(search.toLowerCase())
+					)))
 	);
 
 	return (
@@ -105,19 +127,35 @@ const PokemonHome = () => {
 					onChange={(e) => setSearch(e.target.value)}
 				/>
 			</div>
+			<div className="generation-filter">
+				<select onChange={(e) => setGen(e.target.value)} value={gen}>
+					<option value="All">All Gen</option>
+					<option value="Gen 1">Generation 1</option>
+					<option value="Gen 2">Generation 2</option>
+					<option value="Gen 3">Generation 3</option>
+				</select>
+			</div>
 			<h3>Pokémon:</h3>
 			<div className="pokemon-grid">
-				{filteredPokemon.map((species) => {
-					const Index = pokemon.findIndex((poke) => poke.name === species.name);
-					return (
-						<Pokemon
-							key={Index}
-							species={species}
-							Index={Index}
-							types={Types[species.name] || []}
-						/>
-					);
-				})}
+				{loading ? (
+					<h1>Loading...</h1>
+				) : filteredPokemon.length > 0 ? (
+					filteredPokemon.map((species) => {
+						const Index = pokemon.findIndex(
+							(poke) => poke.name === species.name
+						);
+						return (
+							<Pokemon
+								key={Index}
+								species={species}
+								Index={Index}
+								types={Types[species.name] || []}
+							/>
+						);
+					})
+				) : (
+					<h1>NOT FOUND!!!</h1>
+				)}
 			</div>
 		</Container>
 	);

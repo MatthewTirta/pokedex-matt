@@ -1,81 +1,84 @@
 .pokemon-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 20px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	gap: 20px;
 }
 
 .pokemon-box {
-  flex-basis: calc(33.33% - 20px); /* Adjust the width for 3 boxes per line */
-  display: flex;
-  align-items: center;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
-  box-sizing: border-box;
+	flex-basis: calc(33.33% - 20px); /* Adjust the width for 3 boxes per line */
+	display: flex;
+	align-items: center;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	padding: 10px;
+	box-sizing: border-box;
 }
 
 .pokemon-box img {
-  width: 100px;
-  height: 100px;
+	width: 100px;
+	height: 100px;
 }
 
 .pokemon-info {
-  display: flex;
-  flex-direction: column;
-  margin-left: 30px ;
+	display: flex;
+	flex-direction: column;
+	margin-left: 30px;
 }
 
 .pokemon-name {
-  font-size: 18px;
-  font-weight: bold;
-  margin-top: 5px;
+	font-size: 18px;
+	font-weight: bold;
+	margin-top: 5px;
+	margin-left: 5px;
 }
 
 .pokemon-id {
-  font-size: 14px;
-  color: #888;
+	font-size: 14px;
+	margin-left: 5px;
+	color: #888;
 }
 
 .search-bar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 20px; 
-  background-color: #d3c7c7; 
-  border-radius: 5px;
-  padding: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 20px;
+	background-color: #d3c7c7;
+	border-radius: 5px;
+	padding: 10px;
 }
 
 .search-bar input {
-  flex-grow: 1;
-  border: none;
-  outline: none;
-  background-color: transparent;
-  color: black;
-  font-size: 18px;
-  padding-right: 30px;
+	flex-grow: 1;
+	border: none;
+	outline: none;
+	background-color: transparent;
+	color: black;
+	font-size: 18px;
+	padding-right: 30px;
 }
 
 .search-icon {
-  width: 20px; /* Adjust the width of the icon */
-  height: 20px; /* Adjust the height of the icon */
-  margin-left: 10px; /* Adjust the margin as needed */
-  cursor: pointer;
+	width: 20px; /* Adjust the width of the icon */
+	height: 20px; /* Adjust the height of the icon */
+	margin-left: 10px; /* Adjust the margin as needed */
+	cursor: pointer;
 }
 
-.table{
-  width: 100%;
-  border: 3px solid black;
-  border-collapse: collapse;
+.table {
+	width: 100%;
+	border: 3px solid black;
+	border-collapse: collapse;
 }
 
-.table th, .table td{
-  border: 1px solid black;
-  padding: 5px;
-  text-align: left;
+.table th,
+.table td {
+	border: 1px solid black;
+	padding: 5px;
+	text-align: left;
 }
 
-.table-hover:hover{
-  background-color: #b8b7b7;
+.table-hover:hover {
+	background-color: #b8b7b7;
 }
