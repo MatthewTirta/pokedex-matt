@@ -40,13 +40,13 @@ const filterGen = (index) => {
 	}
 };
 
-const Pokemon = ({ species, Index, types }) => {
+const Pokemon = ({ species, Index, types, onClick }) => {
 	const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
 		Index + 1
 	}.png`;
 
 	return (
-		<div className="pokemon-box">
+		<div className="pokemon-box" onClick={() => onClick(species.name)}>
 			<div className="pokemon-image">
 				<img src={imageUrl} alt={species.name} />
 			</div>
@@ -81,6 +81,7 @@ const PokemonHome = () => {
 	const [Types, setTypes] = useState({});
 	const [loading, setLoading] = useState(true);
 	const [gen, setGen] = useState('ALL');
+	const [selectPoke, setSelectPoke] = useState(null);
 
 	useEffect(() => {
 		fetchData().then((data) => {
@@ -100,9 +101,24 @@ const PokemonHome = () => {
 
 			setTimeout(() => {
 				setLoading(false);
-			}, 3000);
+			}, 1500);
 		});
 	}, []);
+
+	const handlePokemon = async (pokemonName) => {
+		const response = await fetch(
+			`https://pokeapi.co/api/v2/pokemon/${pokemonName}`
+		);
+		const data = await response.json();
+		const pokemonAbilities = data.abilities.map((a) => a.ability.name);
+		const selected = {
+			species: pokemon.find((p) => p.name === pokemonName),
+			types: Types[pokemonName] || [],
+			Index: pokemon.findIndex((p) => p.name === pokemonName),
+			abilities: pokemonAbilities,
+		};
+		setSelectPoke(selected);
+	};
 
 	const filteredPokemon = pokemon.filter(
 		(species) =>
@@ -118,46 +134,117 @@ const PokemonHome = () => {
 	);
 
 	return (
-		<Container>
-			<div className="search-bar">
-				<Input
-					type="text"
-					placeholder="Search Pokémon by name / type"
-					value={search}
-					onChange={(e) => setSearch(e.target.value)}
-				/>
-			</div>
-			<div className="generation-filter">
-				<select onChange={(e) => setGen(e.target.value)} value={gen}>
-					<option value="All">All Gen</option>
-					<option value="Gen 1">Generation 1</option>
-					<option value="Gen 2">Generation 2</option>
-					<option value="Gen 3">Generation 3</option>
-				</select>
-			</div>
-			<h3>Pokémon:</h3>
-			<div className="pokemon-grid">
-				{loading ? (
-					<h1>Loading...</h1>
-				) : filteredPokemon.length > 0 ? (
-					filteredPokemon.map((species) => {
-						const Index = pokemon.findIndex(
-							(poke) => poke.name === species.name
-						);
-						return (
-							<Pokemon
-								key={Index}
-								species={species}
-								Index={Index}
-								types={Types[species.name] || []}
-							/>
-						);
-					})
-				) : (
-					<h1>NOT FOUND!!!</h1>
-				)}
-			</div>
-		</Container>
+		<>
+			<Container>
+				<div className="search-bar">
+					<Input
+						type="text"
+						placeholder="Search Pokémon by name / type"
+						value={search}
+						onChange={(e) => setSearch(e.target.value)}
+					/>
+				</div>
+				<div className="generation-filter">
+					<select onChange={(e) => setGen(e.target.value)} value={gen}>
+						<option value="All">All Gen</option>
+						<option value="Gen 1">Generation 1</option>
+						<option value="Gen 2">Generation 2</option>
+						<option value="Gen 3">Generation 3</option>
+					</select>
+				</div>
+				<h3>Pokémon:</h3>
+				<div className="pokemon-grid">
+					{loading ? (
+						<h1>Loading...</h1>
+					) : filteredPokemon.length > 0 ? (
+						filteredPokemon.map((species) => {
+							const Index = pokemon.findIndex(
+								(poke) => poke.name === species.name
+							);
+							return (
+								<Pokemon
+									key={Index}
+									species={species}
+									Index={Index}
+									types={Types[species.name] || []}
+									onClick={handlePokemon}
+								/>
+							);
+						})
+					) : (
+						<h1>NOT FOUND!!!</h1>
+					)}
+				</div>
+			</Container>
+
+			{selectPoke && (
+				<div className="overlay">
+					<div className="pokemon-detail">
+						<button onClick={() => setSelectPoke(null)}>Close</button>
+						<h2>{capitalize(selectPoke?.species.name)}</h2>
+						<img
+							src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
+								selectPoke?.Index + 1
+							}.png`}
+							alt={selectPoke?.species.name}
+						/>
+						<div
+							className="pokemon-types"
+							style={{
+								textAlign: 'center',
+								marginBottom: '10px',
+							}}
+						>
+							Abilities:
+							<br />
+							{selectPoke.types.map((type) => (
+								<span
+									key={type}
+									style={{
+										backgroundColor: typeColors[type],
+										color: 'black',
+										padding: '2px 5px',
+										marginLeft: '5px',
+										marginTop: '10px',
+										borderRadius: '5px',
+										display: 'inline-block',
+									}}
+								>
+									{capitalize(type)}
+								</span>
+							))}
+						</div>
+
+						<div
+							className="pokemon-abilities"
+							style={{
+								textAlign: 'center',
+								marginTop: '10px',
+							}}
+						>
+							Abilities:
+							<br />
+							{selectPoke?.abilities?.map((ability) => (
+								<span
+									key={ability}
+									style={{
+										backgroundColor: '#BCBDC9',
+										border: '1px solid #BCBDC9',
+										padding: '2px 5px',
+										marginLeft: '5px',
+										marginTop: '10px',
+										borderRadius: '5px',
+										display: 'inline-block',
+									}}
+								>
+									{capitalize(ability)}
+								</span>
+							))}
+						</div>
+					</div>
+				</div>
+			)}
+		</>
 	);
 };
 
